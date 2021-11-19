@@ -40,7 +40,7 @@ consumer.subscriptions.create("GameChannel", {
   }
 });
 
-var Game = function(element, playerType, App){
+let Game = function(element, playerType, App){
 
   this.element = $(element);
 
@@ -59,7 +59,7 @@ var Game = function(element, playerType, App){
   }
 
   this.bindEvents = function(){
-    var self = this;
+    let self = this;
 
     $('#new-match', this.element).click(function(e){
       e.preventDefault();
@@ -76,8 +76,8 @@ var Game = function(element, playerType, App){
     $('#game tr td', this.element).click(function(el, a, b){
       if(self.over) return;
       if(self.activePlayer !== self.currentPlayer) return;
-      var col = $(this).index();
-      var row = $(this).closest('tr').index();
+      let col = $(this).index();
+      let row = $(this).closest('tr').index();
       App.take_turn(row +' '+ col);
       self.move( row +' '+ col );
     });
@@ -141,7 +141,7 @@ var Game = function(element, playerType, App){
    */
   this.parseInput = function(v){
     v = v.split(' ');
-    var pos = Number(v[1]);
+    let pos = Number(v[1]);
     if(v[0] == 1) pos = (pos+3);
     if(v[0] == 2) pos = (pos+6);
     return {
@@ -158,8 +158,7 @@ var Game = function(element, playerType, App){
    * @return {boolean}
    */
   this.tryMove = function(input){
-    if(this.Board.board[input] == '_') return true;
-    return false;
+    return this.Board.board[input] == '_';
   };
 
   /**
@@ -169,7 +168,7 @@ var Game = function(element, playerType, App){
    * @return {boolean}   return false if we are unable to make the move
    */
   this.move = function(v){
-    var Player = this.Player[ this.activePlayer ];
+    let Player = this.Player[ this.activePlayer ];
     v = this.parseInput(v);
     if(!this.tryMove(v.index)) return false;
 
@@ -204,9 +203,9 @@ var Game = function(element, playerType, App){
     }
 
     // only animate the winning pieces!
-    var elements = '';
-    for(var i=0; i<this._winPiece.length; i++){
-      var p = this._winPiece[i]
+    let elements = '';
+    for(let i=0; i<this._winPiece.length; i++){
+      let p = this._winPiece[i]
       if (p < 3){
         elements += 'tr:eq(0) td:eq('+ p +'),';
       } else if( p < 6){
@@ -232,9 +231,9 @@ var Game = function(element, playerType, App){
    * @return {Boolean}
    */
   this.hasWon = function(Player){
-    var won = false;
-    var wins = Player.moves.join(' ');
-    var self = this;
+    let won = false;
+    let wins = Player.moves.join(' ');
+    let self = this;
 
     this.Board.wins.map(function(n){
       if(wins.includes(n[0]) && wins.includes(n[1]) && wins.includes(n[2])){
@@ -260,7 +259,7 @@ var Game = function(element, playerType, App){
 /**
  * Player Object
  */
-var Player = function(id, computer){
+let Player = function(id, computer){
   this._id = id;
   this.symbol = (id == 0) ? 'X' : 'O';
   this.computer = (computer) ? computer : false; // default to computer user
@@ -272,7 +271,7 @@ var Player = function(id, computer){
 /**
  * Board Object
  */
-var Board = function(){
+let Board = function(){
   // empty board (3x3)
   this.board = [
     '_','_','_',
@@ -287,13 +286,13 @@ var Board = function(){
   ];
 
   this.update = function(){
-    var board = this.board;
+    let board = this.board;
     $('#game tr').each(function(x, el){
       $('td', el).each(function(i, td){
-        var pos = Number(i);
+        let pos = Number(i);
         if(x == 1) pos = (pos+3);
         if(x == 2) pos = (pos+6);
-        var txt = (board[pos] == '_') ? '' : board[pos];
+        let txt = (board[pos] == '_') ? '' : board[pos];
         $(this).html( txt ).addClass( txt );
       });
     });
