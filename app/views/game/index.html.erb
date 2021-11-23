@@ -1,6 +1,6 @@
 <h1 class="title">Tic Tac Toe </h1>
 <h3>Matches</h3>
-<% @waiting_players.each do |match| %>
+<% @created_matches.each do |match| %>
   <h3><%= link_to "#{match}", connect_to_match_game_path(current_user.user_name, match_name: match) %></h3>
 <% end %>
 
