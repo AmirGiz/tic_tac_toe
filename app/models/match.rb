@@ -1,22 +1,15 @@
 class Match < ApplicationRecord
-  def self.create(uuid)
-    if !REDIS.get('matches').blank?
-      # Get the uuid of the player waiting
-      opponent = REDIS.get('matches')
-
-      Game.start(uuid, opponent)
-      # Clear the waiting key as no one new is waiting
-      REDIS.set('matches', nil)
-    else
-      REDIS.set('matches', uuid)
-    end
+  def self.create(current_user)
+    REDIS.set("match_#{current_user}", current_user)
+    # ActionCable.server.broadcast "player_#{current_user}", { action: 'match_created' }
   end
 
-  def self.remove(uuid)
-    REDIS.set('matches', nil) if uuid == REDIS.get('matches')
+  def self.connect_to_game(current_user, opponent)
+    Game.start(current_user, opponent)
+    REDIS.del("match_#{opponent}")
   end
 
-  def self.clear_all
-    REDIS.del('matches')
+  def self.remove(current_user)
+    REDIS.del("match_#{current_user}") if REDIS.get("match_#{current_user}").present?
   end
 end

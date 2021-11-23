@@ -1,11 +1,9 @@
 import consumer from "./consumer"
 import "jquery"
-// import "../game"
 
-consumer.subscriptions.create("GameChannel", {
+const App = consumer.subscriptions.create("GameChannel", {
   connected() {
     // Called when the subscription is ready for use on the server
-    $('#status').html("Waiting for an other payer")
   },
 
   disconnected() {
@@ -17,7 +15,7 @@ consumer.subscriptions.create("GameChannel", {
     switch (data.action) {
       case "game_start":
         $('#status').html("Player found");
-        return this.gamePlay = new Game('#game-container', data.msg, this);
+        return this.gamePlay = new Game('#game-container', data.msg);
       case "take_turn":
         this.gamePlay.move(data.move);
         return this.gamePlay.getTurn();
@@ -40,7 +38,7 @@ consumer.subscriptions.create("GameChannel", {
   }
 });
 
-let Game = function(element, playerType, App){
+let Game = function(element, playerType){
 
   this.element = $(element);
 

@@ -12,24 +12,22 @@ class Game < ApplicationRecord
     REDIS.set("opponent_for:#{nought}", cross)
   end
 
-  def self.withdraw(uuid)
-    winner = opponent_for(uuid)
+  def self.withdraw(current_user)
+    winner = opponent_for(current_user)
     ActionCable.server.broadcast "player_#{winner}", { action: 'opponent_withdraw' } if winner
   end
 
-  def self.opponent_for(uuid)
-    REDIS.get("opponent_for:#{uuid}")
+  def self.opponent_for(current_user)
+    REDIS.get("opponent_for:#{current_user}")
   end
 
-  def self.take_turn(uuid, move)
-    opponent = opponent_for(uuid)
-
+  def self.take_turn(current_user, move)
+    opponent = opponent_for(current_user)
     ActionCable.server.broadcast "player_#{opponent}", { action: 'take_turn', move: move['data'] }
   end
 
-  def self.new_game(uuid)
-    opponent = opponent_for(uuid)
-
+  def self.new_game(current_user)
+    opponent = opponent_for(current_user)
     ActionCable.server.broadcast "player_#{opponent}", { action: 'new_game' }
   end
 end
