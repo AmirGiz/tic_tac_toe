@@ -4,6 +4,4 @@
   <h3><%= link_to "#{match}", connect_to_match_game_path(current_user.user_name, match_name: match) %></h3>
 <% end %>
 
-<span>
-  <%= link_to "New Match", crate_a_match_game_path(current_user.user_name) %>
-</span>
+<span><%= link_to "New Match", crate_a_match_game_path(current_user.user_name) %></span>

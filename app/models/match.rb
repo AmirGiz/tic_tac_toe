@@ -6,7 +6,8 @@ class Match < ApplicationRecord
 
   def self.connect_to_game(current_user, opponent)
     Game.start(current_user, opponent)
-    REDIS.del("match_#{opponent}")
+    # REDIS.del("match_#{opponent}")
+    REDIS.set("match_#{opponent}", current_user)
   end
 
   def self.remove(current_user)

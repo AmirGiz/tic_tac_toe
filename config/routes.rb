@@ -6,6 +6,6 @@ Rails.application.routes.draw do
       get 'connect_to_match'
     end
   end
-  get '/match/:id', to: 'grid#index', as: 'match'
+  get 'match/:id', to: 'grid#index', as: 'match'
   devise_for :users
 end

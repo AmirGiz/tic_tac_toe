@@ -5,9 +5,11 @@ class GameChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    Game.withdraw(current_user)
-    # Remove yourself from the waiting list
-    Match.remove(current_user)
+    if REDIS.get("match_#{current_user}").present?
+      Game.withdraw(current_user)
+      # Remove yourself from the waiting list
+      Match.remove(current_user)
+    end
   end
 
   def take_turn(data)
@@ -16,5 +18,9 @@ class GameChannel < ApplicationCable::Channel
 
   def new_game
     Game.new_game(current_user)
+  end
+
+  def new_match
+    Match.create(current_user)
   end
 end
