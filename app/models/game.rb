@@ -1,13 +1,12 @@
 class Game < ApplicationRecord
   def self.start(player1, player2)
-    # Randomly choses who gets to be noughts or crosses
+    # Рандомно определяется очередь
     cross, nought = [player1, player2].shuffle
 
-    # Broadcast back to the players subscribed to the channel that the game has started
+    # Броадкаст пользователям и старт игры
     ActionCable.server.broadcast "player_#{cross}", { action: 'game_start', msg: 'cross' }
     ActionCable.server.broadcast "player_#{nought}", { action: 'game_start', msg: 'nought' }
 
-    # Store the details of each opponent
     REDIS.set("opponent_for:#{cross}", nought)
     REDIS.set("opponent_for:#{nought}", cross)
   end

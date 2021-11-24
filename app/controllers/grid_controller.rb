@@ -1,8 +1,12 @@
 class GridController < ApplicationController
-  def index
-    # participant = Match.find_by(owner: params[:id]).participant
-    # if participant.present?
-    #   Game.start(participant, params[:id])
-    # end
+  after_action :start_game
+
+  def index; end
+
+  private
+
+  def start_game
+    match = Match.find_by(owner: params[:id])
+    Game.start(match.participant, params[:id]) if match.present?
   end
 end
